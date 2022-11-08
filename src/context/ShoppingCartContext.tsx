@@ -1,4 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
+import { ShoppingCart } from '../components/ShoppingCart';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 type ShoppingCartProviderProps = {
     children: ReactNode;
@@ -28,7 +30,7 @@ export function useShoppingCart() {
 
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [cartItems, setCartItems] = useLocalStorage<CartItem[]>('shopping-cart', []);
 
     //reducer is a loop with memory, in first arg is accumulator, in which we save result of the inner function
     // item.quantity + [memory]quantity is saved to [memory]quantity,second is current item form loop,
@@ -94,6 +96,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
             }}
         >
             {children}
+            <ShoppingCart isOpen={isOpen} />
         </ShoppingCartContext.Provider>
     );
 }
